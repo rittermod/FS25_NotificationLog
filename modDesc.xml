@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="100">
+    <author>Ritter</author>
+    <version>1.0.0.0</version>
+    <!-- <iconFilename>icon_NotificationLog.dds</iconFilename> -->
+    <title>
+        <en>Notification log</en>
+    </title>
+    <description>
+        <en><![CDATA[Notification log
+
+Did the notifications fly by too fast? Use the Notification log to see all notifications in the current session. 
+Default keybinding is Right Shift + M.
+
+- Notification Logging: Automatically captures top notifications, side notifications, and blinking warnings
+- GUI Interface: View session notification history in a dialog (accessible via Right Shift + M)
+- Notification Details: Displays the in-game date/time, and notification content
+- Color Preservation: Maintains original notification colors for easy categorization
+- Warning Filtering: Blinking warnings are logged once per source and in-game minute to prevent spam
+- Clear Log: Remove all notifications with a single button
+
+Source code and issue tracker at https://github.com/rittermod/FS25_NotificationLog
+
+]]></en>
+    </description>
+    <extraSourceFiles>
+        <sourceFile filename="scripts/RmNotificationLog.lua"/>
+    </extraSourceFiles>
+    <multiplayer supported="false"/>
+    <l10n filenamePrefix="languages/l10n" />
+    <inputBinding>
+        <actionBinding action="RM_SHOW_MESSAGE_LOG">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_m"/>
+        </actionBinding>
+    </inputBinding>
+    <actions>
+        <action name="RM_SHOW_MESSAGE_LOG"/>
+    </actions>
+</modDesc>

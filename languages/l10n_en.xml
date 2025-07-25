@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<l10n>
+	<translationContributors/>
+	<texts>
+		<text name="input_RM_SHOW_MESSAGE_LOG" text="Show notification log"/>
+		<text name="ui_notification_log_title" text="Notification Log"/>
+		<text name="ui_header_datetime" text="Date/Time"/>
+		<text name="ui_header_type" text="Type"/>
+		<text name="ui_header_title" text="Title"/>
+		<text name="ui_header_notification" text="Notification"/>
+		<text name="ui_total_notifications" text="Total Notifications:"/>
+		<text name="ui_button_clear_log" text="Clear Log"/>
+		<text name="ui_button_close" text="Close"/>
+		<text name="ui_notification_log_no_data" text="--"/>
+		<text name="ui_notification_log_clear_confirmation" text="Are you sure you want to clear all %d notifications? This action cannot be undone."/>
+		<text name="ui_notification_log_clear_title" text="Clear Notification Log"/>
+		<text name="ui_notification_log_clear_yes" text="Clear Log"/>
+		<text name="ui_notification_log_clear_no" text="Cancel"/>
+	</texts>
+</l10n>

@@ -1,0 +1,18 @@
+{
+  "name": "fs25-notification-log",
+  "version": "1.0.0.0",
+  "description": "Build system for FS25 Notification Log mod",
+  "scripts": {
+    "build": "./build.sh build",
+    "validate": "./build.sh validate",
+    "package": "./build.sh package",
+    "deploy": "./build.sh deploy",
+    "clean": "./build.sh clean",
+    "release": "./build.sh build"
+  },
+  "author": "Ritter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rittermod/FS25_NotificationLog"
+  }
+}
