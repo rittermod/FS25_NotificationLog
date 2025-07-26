@@ -2,7 +2,7 @@
 <modDesc descVersion="100">
     <author>Ritter</author>
     <version>1.0.0.0</version>
-    <!-- <iconFilename>icon_NotificationLog.dds</iconFilename> -->
+    <iconFilename>icon_NotificationLog.dds</iconFilename>
     <title>
         <en>Notification log</en>
     </title>

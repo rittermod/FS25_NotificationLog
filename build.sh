@@ -86,6 +86,75 @@ validate_build_dir() {
 ######## 
 # Build functions
 
+# Validate icon file reference in modDesc.xml
+validate_icon_reference() {
+    log_info "Validating icon file reference..."
+    
+    # Check if there are any icon files in the directory
+    local icon_files=(icon_*.dds)
+    local has_icon_file=false
+    
+    if [[ -f "${icon_files[0]}" ]]; then
+        has_icon_file=true
+        local icon_filename="${icon_files[0]}"
+        log_info "Found icon file: $icon_filename"
+    fi
+    
+    # Check iconFilename tag in modDesc.xml
+    if command -v xmllint &> /dev/null; then
+        # Use xmllint to extract iconFilename value (if present and not commented)
+        local icon_in_xml
+        icon_in_xml=$(xmllint --xpath "string(//iconFilename)" modDesc.xml 2>/dev/null || echo "")
+        
+        if [[ -n "$icon_in_xml" ]]; then
+            log_info "iconFilename tag found with value: $icon_in_xml"
+            
+            # Verify the referenced icon file exists
+            if [[ ! -f "$icon_in_xml" ]]; then
+                log_error "Icon file referenced in modDesc.xml does not exist: $icon_in_xml"
+                exit 1
+            fi
+            
+            log_success "Icon file reference is valid"
+        else
+            # Check if iconFilename tag exists but is commented out
+            if grep -q "<!--.*<iconFilename>" modDesc.xml; then
+                if [[ "$has_icon_file" == true ]]; then
+                    log_error "iconFilename tag is commented out in modDesc.xml, but icon file exists: $icon_filename"
+                    log_error "Please uncomment the iconFilename tag to reference the icon file"
+                    exit 1
+                else
+                    log_info "iconFilename tag is commented out (no icon file present)"
+                fi
+            elif grep -q "<iconFilename>" modDesc.xml; then
+                # Tag exists but xmllint couldn't extract it (malformed?)
+                log_warning "iconFilename tag found but may be malformed or empty"
+            else
+                if [[ "$has_icon_file" == true ]]; then
+                    log_error "Icon file exists ($icon_filename) but no iconFilename tag found in modDesc.xml"
+                    log_error "Please add <iconFilename>$icon_filename</iconFilename> to modDesc.xml"
+                    exit 1
+                else
+                    log_info "No icon file or iconFilename tag (acceptable)"
+                fi
+            fi
+        fi
+    else
+        # Fallback check without xmllint
+        log_warning "xmllint not available, using basic icon reference validation"
+        
+        if grep -q "<!--.*<iconFilename>" modDesc.xml; then
+            if [[ "$has_icon_file" == true ]]; then
+                log_error "iconFilename tag appears to be commented out, but icon file exists: $icon_filename"
+                exit 1
+            fi
+        elif ! grep -q "<iconFilename>" modDesc.xml && [[ "$has_icon_file" == true ]]; then
+            log_error "Icon file exists ($icon_filename) but no iconFilename tag found in modDesc.xml"
+            exit 1
+        fi
+    fi
+}
+
 # Validate mod structure and files
 validate_mod() {
     log_info "Validating mod structure..."
@@ -101,6 +170,9 @@ validate_mod() {
     if [[ ! -f "${icon_files[0]}" ]]; then
         log_warning "No icon file (icon_*.dds) found in root directory"
     fi
+    
+    # Validate icon reference in modDesc.xml
+    validate_icon_reference
     
     if [[ ! -d "scripts" ]]; then
         log_error "scripts/ directory is missing"
