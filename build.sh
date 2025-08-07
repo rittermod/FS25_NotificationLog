@@ -326,10 +326,10 @@ package_mod() {
     
     # Save current directory and change to build directory
     local original_dir=$(pwd)
-    cd "$BUILD_DIR"
+    cd "$BUILD_DIR/$MOD_NAME"
     
     if command -v zip &> /dev/null; then
-        zip -r "$zip_name" "$MOD_NAME/" > /dev/null
+        zip -r "../$zip_name" * > /dev/null
     else
         log_error "zip command not found. Please install zip utility."
         exit 1
