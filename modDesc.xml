@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="100">
     <author>Ritter</author>
-    <version>1.0.0.2</version>
+    <version>1.0.0.3</version>
     <iconFilename>icon_NotificationLog.dds</iconFilename>
     <title>
         <en>Notification log</en>
@@ -21,7 +21,7 @@ Default keybinding is Right Shift + M.
 
 Source code and issue tracker at https://github.com/rittermod/FS25_NotificationLog
 
-]]></en>
+]]>        </en>
     </description>
     <extraSourceFiles>
         <sourceFile filename="scripts/RmNotificationLog.lua"/>
