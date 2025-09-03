@@ -82,9 +82,15 @@ end
 
 function RmNotificationLog.addPlayerActionEvents(self, controlling)
     RmUtils.logDebug("Adding player action events")
-    local triggerUp, triggerDown, triggerAlways, startActive, callbackState, disableConflictingBindings = false, true, false, true, nil, true
-    local success, actionEventId, otherEvents = g_inputBinding:registerActionEvent(InputAction.RM_SHOW_MESSAGE_LOG, RmNotificationLog, RmNotificationLog.showNotificationLog, triggerUp, triggerDown, triggerAlways, startActive, callbackState, disableConflictingBindings);
-    if not success then
+    local triggerUp, triggerDown, triggerAlways, startActive, callbackState, disableConflictingBindings = false, true,
+        false, true, nil, true
+    local success, actionEventId, otherEvents = g_inputBinding:registerActionEvent("RM_SHOW_MESSAGE_LOG",
+        RmNotificationLog, RmNotificationLog.showNotificationLog, triggerUp, triggerDown, triggerAlways, startActive,
+        callbackState, disableConflictingBindings);
+
+    if not success and controlling ~= "VEHICLE" then
+        -- If we failed to register the action event, log an error
+        -- except if we are in a vehicle then success is false even if the registration succeeded
         RmUtils.logError("Failed to register action event for RM_SHOW_MESSAGE_LOG")
         return
     end
