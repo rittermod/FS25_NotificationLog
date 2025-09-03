@@ -62,12 +62,12 @@ function RmUtils.tableToString(tbl, indent, maxDepth, initialIndent)
     maxDepth = maxDepth or 2
     initialIndent = initialIndent or indent
     local result = {}
-    
+
     if (indent - initialIndent) >= maxDepth then
         table.insert(result, string.rep("  ", indent) .. "...")
         return table.concat(result, "\n")
     end
-    
+
     for k, v in pairs(tbl) do
         local formatting = string.format("%s%s: ", string.rep("  ", indent), tostring(k))
         if type(v) == "table" then
@@ -77,20 +77,20 @@ function RmUtils.tableToString(tbl, indent, maxDepth, initialIndent)
             table.insert(result, string.format("%s%s", formatting, tostring(v)))
         end
     end
-    
+
     return table.concat(result, "\n")
 end
 
 function RmUtils.functionParametersToString(...)
-    local args = {...}
+    local args = { ... }
     local result = {}
-    
+
     for i, v in ipairs(args) do
         table.insert(result, string.format("Parameter %d: (%s) %s", i, type(v), tostring(v)))
         if type(v) == "table" then
             table.insert(result, RmUtils.tableToString(v, 0, 2))
         end
     end
-    
+
     return table.concat(result, "\n")
 end
