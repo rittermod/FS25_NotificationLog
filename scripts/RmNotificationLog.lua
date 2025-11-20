@@ -1,3 +1,5 @@
+-- Module declaration
+-- Note: Dependencies (RmLogging, RmNotificationLogFrame) are loaded via scripts/main.lua
 RmNotificationLog = {}
 local RmNotificationLog_mt = Class(RmNotificationLog)
 
@@ -5,6 +7,10 @@ local RmNotificationLog_mt = Class(RmNotificationLog)
 RmNotificationLog.startYear = 2025                                       -- Start year for the notification log (Year 1 = 2025)
 RmNotificationLog.TOP_NOTIFICATION_COLOR = { 0.0003, 0.5647, 0.9822, 1 } -- FS22 blue color for top notifications
 RmNotificationLog.WARNING_COLOR = { 1, 0.3, 0.3, 1 }                     -- Red color for blinking warnings
+
+-- Configure logging
+RmLogging.setLogPrefix("[RmNotificationLog]")
+-- RmLogging.setLogLevel(RmLogging.LOG_LEVEL.DEBUG)
 
 -- Table to store notifications (module level for compatibility)
 RmNotificationLog.notifications = {}
@@ -19,13 +25,12 @@ function RmNotificationLog.new(customMt)
 end
 
 RmNotificationLog.dir = g_currentModDirectory
-source(RmNotificationLog.dir .. "gui/RmNotificationLogFrame.lua")
-source(RmNotificationLog.dir .. "scripts/RmUtils.lua")
+-- Note: RmNotificationLogFrame loaded via main.lua
 
 function RmNotificationLog.logNotification(notificationText, color)
     -- Parameter validation
     if notificationText == nil then
-        RmUtils.logWarning("logNotification called with nil notificationText")
+        RmLogging.logWarning("logNotification called with nil notificationText")
         return
     end
 
@@ -56,13 +61,13 @@ function RmNotificationLog.logNotification(notificationText, color)
     }
 
     table.insert(RmNotificationLog.notifications, notification)
-    RmUtils.logInfo(string.format("Notification logged: %s %s | Text: %s",
+    RmLogging.logInfo(string.format("Notification logged: %s %s | Text: %s",
         notification.realDateTime, notification.ingameDateTime, notification.notificationText))
-    RmUtils.logTrace("Notification table size:", #RmNotificationLog.notifications)
+    RmLogging.logTrace("Notification table size:", #RmNotificationLog.notifications)
 end
 
 function RmNotificationLog.showNotificationLog()
-    RmUtils.logDebug("Showing notification log GUI")
+    RmLogging.logDebug("Showing notification log GUI")
     if g_gui:getIsGuiVisible() then
         return
     end
@@ -70,7 +75,7 @@ function RmNotificationLog.showNotificationLog()
 end
 
 function RmNotificationLog.loadMap()
-    RmUtils.logDebug("Mod loaded!")
+    RmLogging.logDebug("Mod loaded!")
 
     -- Load GUI profiles
     g_gui:loadProfiles(RmNotificationLog.dir .. "gui/guiProfiles.xml")
@@ -80,7 +85,7 @@ function RmNotificationLog.loadMap()
 end
 
 function RmNotificationLog.addPlayerActionEvents(self, controlling)
-    RmUtils.logDebug("Adding player action events")
+    RmLogging.logDebug("Adding player action events")
     local triggerUp, triggerDown, triggerAlways, startActive, callbackState, disableConflictingBindings = false, true,
         false, true, nil, true
     local success, actionEventId, otherEvents = g_inputBinding:registerActionEvent("RM_SHOW_MESSAGE_LOG",
@@ -90,7 +95,7 @@ function RmNotificationLog.addPlayerActionEvents(self, controlling)
     if not success and controlling ~= "VEHICLE" then
         -- If we failed to register the action event, log an error
         -- except if we are in a vehicle then success is false even if the registration succeeded
-        RmUtils.logError("Failed to register action event for RM_SHOW_MESSAGE_LOG")
+        RmLogging.logError("Failed to register action event for RM_SHOW_MESSAGE_LOG")
         return
     end
     -- Hide the action event text
@@ -98,7 +103,7 @@ function RmNotificationLog.addPlayerActionEvents(self, controlling)
 end
 
 function RmNotificationLog.currentMissionStarted()
-    RmUtils.logDebug("Current mission started")
+    RmLogging.logDebug("Current mission started")
 
     -- Hook into HUD side notifications
     if g_currentMission.hud and g_currentMission.hud.addSideNotification then

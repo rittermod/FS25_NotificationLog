@@ -1,19 +1,14 @@
 {
-  "name": "fs25-notification-log",
+  "name": "fs25-mod-build",
   "version": "1.0.0.0",
-  "description": "Build system for FS25 Notification Log mod",
+  "description": "Build system for FS25 mods",
   "scripts": {
-    "build": "../build_mod/build.sh build",
-    "validate": "../build_mod/build.sh validate",
-    "package": "../build_mod/build.sh package",
-    "deploy": "../build_mod/build.sh deploy",
-    "sync": "../build_mod/build.sh sync",
-    "clean": "../build_mod/build.sh clean",
-    "release": "../build_mod/build.sh build"
+    "validate": "MD=${PWD} && cd ../../FS25_mods_build_helper && poetry run modbuild validate ${MD}",
+    "package": "MD=${PWD} && cd ../../FS25_mods_build_helper && poetry run modbuild package ${MD}",
+    "deploy": "MD=${PWD} && cd ../../FS25_mods_build_helper && poetry run modbuild deploy ${MD}",
+    "sync": "MD=${PWD} && cd ../../FS25_mods_build_helper && poetry run modbuild sync ${MD}",
+    "clean": "MD=${PWD} && cd ../../FS25_mods_build_helper && poetry run modbuild clean ${MD}",
+    "release": "MD=${PWD} && cd ../../FS25_mods_build_helper && poetry run modbuild build ${MD}"
   },
-  "author": "Ritter",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/rittermod/FS25_NotificationLog"
-  }
+  "author": "Ritter"
 }

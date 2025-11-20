@@ -1,4 +1,7 @@
 .claude/
+.serena/
+claudedocs/
 CLAUDE.md
 .vscode/
 build/
+
