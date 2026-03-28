@@ -1,6 +1,8 @@
 -- Notification Log Frame
 -- Displays notification history in a GUI dialog
 
+local Log = RmLogging.getLogger("NotificationLog")
+
 RmNotificationLogFrame = {}
 local RmNotificationLogFrame_mt = Class(RmNotificationLogFrame, MessageDialog)
 
@@ -19,26 +21,26 @@ RmNotificationLogFrame.CONTROLS = {
 }
 
 function RmNotificationLogFrame.new(target, custom_mt)
-    RmLogging.logTrace("RmNotificationLogFrame:new()")
+    Log:trace("RmNotificationLogFrame:new()")
     local self = MessageDialog.new(target, custom_mt or RmNotificationLogFrame_mt)
     self.notifications = {}
     return self
 end
 
 function RmNotificationLogFrame:onGuiSetupFinished()
-    RmLogging.logTrace("RmNotificationLogFrame:onGuiSetupFinished()")
+    Log:trace("RmNotificationLogFrame:onGuiSetupFinished()")
     RmNotificationLogFrame:superClass().onGuiSetupFinished(self)
     self.notificationTable:setDataSource(self)
     self.notificationTable:setDelegate(self)
 end
 
 function RmNotificationLogFrame:onCreate()
-    RmLogging.logTrace("RmNotificationLogFrame:onCreate()")
+    Log:trace("RmNotificationLogFrame:onCreate()")
     RmNotificationLogFrame:superClass().onCreate(self)
 end
 
 function RmNotificationLogFrame:onOpen()
-    RmLogging.logTrace("RmNotificationLogFrame:onOpen()")
+    Log:trace("RmNotificationLogFrame:onOpen()")
     RmNotificationLogFrame:superClass().onOpen(self)
     
     -- Get notifications from the main notification log
@@ -70,7 +72,7 @@ function RmNotificationLogFrame:onOpen()
 end
 
 function RmNotificationLogFrame:onClose()
-    RmLogging.logTrace("RmNotificationLogFrame:onClose()")
+    Log:trace("RmNotificationLogFrame:onClose()")
     self.notifications = {}
     RmNotificationLogFrame:superClass().onClose(self)
 end
@@ -107,12 +109,12 @@ end
 
 -- Button handlers
 function RmNotificationLogFrame:onClickClose()
-    RmLogging.logTrace("RmNotificationLogFrame:onClickClose()")
+    Log:trace("RmNotificationLogFrame:onClickClose()")
     self:close()
 end
 
 function RmNotificationLogFrame:onClickClearLog()
-    RmLogging.logTrace("RmNotificationLogFrame:onClickClearLog()")
+    Log:trace("RmNotificationLogFrame:onClickClearLog()")
     
     -- Show confirmation dialog
     local confirmationText = string.format(g_i18n:getText("ui_notification_log_clear_confirmation"), #self.notifications)
@@ -131,20 +133,20 @@ function RmNotificationLogFrame:onYesNoClearLog(yes)
             self.totalNotificationsValue:setText("0")
             self.notificationTable:reloadData()
             
-            RmLogging.logInfo("Notification log cleared via GUI")
+            Log:info("Notification log cleared via GUI")
         end
     end
 end
 
 function RmNotificationLogFrame.register()
-    RmLogging.logTrace("RmNotificationLogFrame.register()")
+    Log:trace("RmNotificationLogFrame.register()")
     local dialog = RmNotificationLogFrame.new(g_i18n)
     g_gui:loadGui(RmNotificationLog.dir .. "gui/RmNotificationLogFrame.xml", "RmNotificationLogFrame", dialog)
 end
 
 -- Static function to show the notification log dialog
 function RmNotificationLogFrame.showNotificationLog()
-    RmLogging.logTrace("RmNotificationLogFrame.showNotificationLog()")
+    Log:trace("RmNotificationLogFrame.showNotificationLog()")
     
     -- Create and show the dialog
     local dialog = RmNotificationLogFrame.new()
