@@ -2,10 +2,7 @@
 
 Did the notifications fly by too fast? Use the Notification log to see all notifications in the current session. 
 
-**Singleplayer only.**
-
-## Notes
-Since there is no proper documentation for modding FS25 yet, this mod is made by trial and error and looking at other mods. It may not work as expected and could potentially cause issues with your game.
+**Multiplayer compatible (per-client-local).** Each player keeps a personal session log of the notifications shown on their own screen.
 
 Default key binding is `Right Shift + M` to open the notification log interface. You can change this in the game settings under "Controls".
 

@@ -36,6 +36,14 @@ function RmNotificationLog.logNotification(notificationText, color)
         return
     end
 
+    -- The in-game clock lives on g_currentMission.environment. On a joining
+    -- client it can be briefly nil before the mission is fully initialised;
+    -- drop the notification rather than index a nil environment.
+    if g_currentMission == nil or g_currentMission.environment == nil then
+        Log:trace("Skipping notification - g_currentMission.environment not ready")
+        return
+    end
+
     -- Convert the ingame datetime to a calender datetime.
     -- Adjust month to be 1-12 range. Periods starts in march, so we add 2 to align with the calendar.
     -- Then we adjust the month if it exceeds 12 (i.e., January and February).
@@ -70,6 +78,11 @@ end
 
 function RmNotificationLog.showNotificationLog()
     Log:debug("Showing notification log GUI")
+    -- Defensive: a headless server has no g_gui. The RightShift+M action is never
+    -- registered without a local viewer, but guard the entry point regardless.
+    if g_gui == nil then
+        return
+    end
     if g_gui:getIsGuiVisible() then
         return
     end
@@ -79,6 +92,14 @@ end
 function RmNotificationLog.loadMap()
     Log:debug("Mod loaded!")
 
+    -- loadMap must stay GUI-only: everything below this guard is skipped on a
+    -- headless dedicated server, which has no g_gui to register against. Check
+    -- g_dedicatedServer first - a dedicated server also has g_server and g_client set.
+    if g_dedicatedServer ~= nil then
+        Log:debug("Dedicated server detected - skipping GUI registration")
+        return
+    end
+
     -- Load GUI profiles
     g_gui:loadProfiles(RmNotificationLog.dir .. "gui/guiProfiles.xml")
 
@@ -87,6 +108,14 @@ function RmNotificationLog.loadMap()
 end
 
 function RmNotificationLog.addPlayerActionEvents(self, controlling)
+    -- No local input on a headless dedicated server -> do not register the action
+    -- event (g_inputBinding is a client-side system). Symmetric with the loadMap /
+    -- currentMissionStarted guards; keeps the RightShift+M binding viewer-only.
+    if g_dedicatedServer ~= nil then
+        Log:debug("Dedicated server detected - skipping action event registration")
+        return
+    end
+
     Log:debug("Adding player action events")
     local triggerUp, triggerDown, triggerAlways, startActive, callbackState, disableConflictingBindings = false, true,
         false, true, nil, true
@@ -106,6 +135,14 @@ end
 
 function RmNotificationLog.currentMissionStarted()
     Log:debug("Current mission started")
+
+    -- No local viewer on a dedicated server -> do not install capture hooks
+    -- (otherwise the headless server accumulates an unviewable, unbounded log).
+    -- Check g_dedicatedServer first - a dedicated server also has g_server/g_client.
+    if g_dedicatedServer ~= nil then
+        Log:debug("Dedicated server detected - skipping capture hooks")
+        return
+    end
 
     -- Hook into HUD side notifications
     if g_currentMission.hud and g_currentMission.hud.addSideNotification then
@@ -148,6 +185,11 @@ function RmNotificationLog.currentMissionStarted()
         g_currentMission.showBlinkingWarning = Utils.prependedFunction(g_currentMission.showBlinkingWarning,
             function(self, text, _, _)
                 if text and text ~= "" then
+                    -- The in-game clock can be briefly nil on a joining client;
+                    -- skip this warning rather than index a nil environment.
+                    if g_currentMission == nil or g_currentMission.environment == nil then
+                        return
+                    end
                     -- Get current in-game minute for tracking
                     local currentMinute = g_currentMission.environment.currentMinute
                     local currentHour = g_currentMission.environment.currentHour

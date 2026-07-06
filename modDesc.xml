@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="106">
+<modDesc descVersion="110">
     <author>Ritter</author>
-    <version>1.0.1.0</version>
+    <version>1.1.0.0-dev.1</version>
     <iconFilename>icon_NotificationLog.dds</iconFilename>
     <title>
         <en>Notification log</en>
@@ -26,7 +26,7 @@ Source code and issue tracker at https://github.com/rittermod/FS25_NotificationL
     <extraSourceFiles>
         <sourceFile filename="scripts/main.lua"/>
     </extraSourceFiles>
-    <multiplayer supported="false"/>
+    <multiplayer supported="true"/>
     <l10n filenamePrefix="languages/l10n" />
     <inputBinding>
         <actionBinding action="RM_SHOW_MESSAGE_LOG">
