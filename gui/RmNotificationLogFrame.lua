@@ -39,22 +39,34 @@ function RmNotificationLogFrame:onCreate()
     RmNotificationLogFrame:superClass().onCreate(self)
 end
 
+--- Newest-first dual-clock comparator: primary key is in-game time, real time is
+--- the tiebreak within the same in-game minute. Both are zero-padded fixed-width
+--- strings, so plain string comparison orders them correctly. Nil fields coerce to
+--- "" so a record missing either clock sorts as oldest rather than erroring.
+--- Pure (dot, no self) so it is unit-testable without a live dialog. Equal keys
+--- return false in both directions (equal under a strict-weak ordering); table.sort
+--- stability is not relied upon.
+---@param a table Notification record with ingameDateTime / realDateTime strings.
+---@param b table Notification record with ingameDateTime / realDateTime strings.
+---@return boolean sortsBefore True when a should sort before b (a is newer).
+function RmNotificationLogFrame.compareNotificationsNewestFirst(a, b)
+    local aIngame = a.ingameDateTime or ""
+    local bIngame = b.ingameDateTime or ""
+    if aIngame == bIngame then
+        return (a.realDateTime or "") > (b.realDateTime or "")
+    end
+    return aIngame > bIngame
+end
+
 function RmNotificationLogFrame:onOpen()
     Log:trace("RmNotificationLogFrame:onOpen()")
     RmNotificationLogFrame:superClass().onOpen(self)
-    
+
     -- Get notifications from the main notification log
     if RmNotificationLog.notifications then
         self.notifications = RmNotificationLog.notifications
         -- Sort notifications by in-game time, then by real time if same, newest first
-        table.sort(self.notifications, function(a, b)
-            local aIngame = a.ingameDateTime or ""
-            local bIngame = b.ingameDateTime or ""
-            if aIngame == bIngame then
-                return (a.realDateTime or "") > (b.realDateTime or "")
-            end
-            return aIngame > bIngame
-        end)
+        table.sort(self.notifications, RmNotificationLogFrame.compareNotificationsNewestFirst)
     else
         self.notifications = {}
     end
