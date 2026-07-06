@@ -1,0 +1,2 @@
+# Test files (local only - symlink into the wrapper-root tests/ dir, dev-only)
+scripts/tests
