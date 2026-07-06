@@ -19,6 +19,8 @@ Default keybinding is Right Shift + M.
 - Warning Filtering: Blinking warnings are logged once per source and in-game minute to prevent spam
 - Clear Log: Remove all notifications with a single button
 
+Multiplayer compatible: each player keeps a personal session log of the notifications shown on their own screen.
+
 Source code and issue tracker at https://github.com/rittermod/FS25_NotificationLog
 
 ]]>        </en>
