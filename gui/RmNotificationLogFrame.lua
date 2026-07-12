@@ -155,12 +155,3 @@ function RmNotificationLogFrame.register()
     local dialog = RmNotificationLogFrame.new(g_i18n)
     g_gui:loadGui(RmNotificationLog.dir .. "gui/RmNotificationLogFrame.xml", "RmNotificationLogFrame", dialog)
 end
-
--- Static function to show the notification log dialog
-function RmNotificationLogFrame.showNotificationLog()
-    Log:trace("RmNotificationLogFrame.showNotificationLog()")
-    
-    -- Create and show the dialog
-    local dialog = RmNotificationLogFrame.new()
-    g_gui:showDialog("RmNotificationLogFrame")
-end
